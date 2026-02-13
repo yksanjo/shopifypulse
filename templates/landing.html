@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopifyPulse - E-commerce Analytics for SMB Stores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #22c55e;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: 
+                radial-gradient(ellipse at top, rgba(99, 102, 241, 0.15), transparent),
+                radial-gradient(ellipse at bottom, rgba(139, 92, 246, 0.1), transparent);
+            padding: 4rem 0;
+        }
+        
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-content h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid #334155;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+            border-color: #475569;
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Preview Card */
+        .preview-card {
+            background: var(--bg-secondary);
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .preview-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .preview-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #22c55e; }
+        
+        .preview-content {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .preview-kpi {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .preview-kpi-item {
+            background: #1e293b;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .preview-kpi-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .preview-kpi-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .preview-kpi-change {
+            font-size: 0.75rem;
+            color: var(--success);
+        }
+        
+        .preview-chart {
+            height: 120px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1));
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+            gap: 0.5rem;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 4px 4px 0 0;
+            opacity: 0.8;
+        }
+        
+        /* Features */
+        .features {
+            padding: 6rem 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: var(--bg-secondary);
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.2s;
+        }
+        
+        .feature-card:hover {
+            border-color: #475569;
+            transform: translateY(-4px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 6rem 0;
+            background: 
+                radial-gradient(ellipse at center, rgba(99, 102, 241, 0.1), transparent);
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .pricing-card {
+            background: var(--bg-secondary);
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .pricing-card.popular {
+            border-color: var(--primary);
+            position: relative;
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .pricing-tier {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-price span {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        .pricing-limit {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+        
+        .pricing-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: 700;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            text-align: center;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 3rem 0;
+            border-top: 1px solid #334155;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <h1>E-commerce insights <span>without the overwhelm</span></h1>
+                    <p class="hero-subtitle">
+                        ShopifyPulse is the analytics dashboard built for SMB e-commerce stores. 
+                        Get actionable recommendations, not just pretty charts.
+                    </p>
+                    <div class="hero-cta">
+                        <a href="/demo" class="btn btn-primary">View Live Demo →</a>
+                        <a href="#pricing" class="btn btn-secondary">See Pricing</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-value">500+</span>
+                            <span class="stat-label">Stores Connected</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">$12M+</span>
+                            <span class="stat-label">Revenue Optimized</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">28%</span>
+                            <span class="stat-label">Avg. Conversion Lift</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="preview-card">
+                    <div class="preview-header">
+                        <div class="preview-dots">
+                            <div class="dot dot-red"></div>
+                            <div class="dot dot-yellow"></div>
+                            <div class="dot dot-green"></div>
+                        </div>
+                        <span style="color: var(--text-secondary); font-size: 0.875rem;">UrbanThreads Dashboard</span>
+                    </div>
+                    <div class="preview-content">
+                        <div class="preview-kpi">
+                            <div class="preview-kpi-item">
+                                <div class="preview-kpi-label">Revenue</div>
+                                <div class="preview-kpi-value">$191,667</div>
+                                <div class="preview-kpi-change">+12.5%</div>
+                            </div>
+                            <div class="preview-kpi-item">
+                                <div class="preview-kpi-label">Orders</div>
+                                <div class="preview-kpi-value">2,458</div>
+                                <div class="preview-kpi-change">+8.3%</div>
+                            </div>
+                            <div class="preview-kpi-item">
+                                <div class="preview-kpi-label">Visitors</div>
+                                <div class="preview-kpi-value">45,000</div>
+                                <div class="preview-kpi-change">-2.1%</div>
+                            </div>
+                            <div class="preview-kpi-item">
+                                <div class="preview-kpi-label">Conversion</div>
+                                <div class="preview-kpi-value">5.46%</div>
+                                <div class="preview-kpi-change">+0.4pp</div>
+                            </div>
+                        </div>
+                        <div class="preview-chart">
+                            <div class="chart-bar" style="height: 60%;"></div>
+                            <div class="chart-bar" style="height: 75%;"></div>
+                            <div class="chart-bar" style="height: 55%;"></div>
+                            <div class="chart-bar" style="height: 80%;"></div>
+                            <div class="chart-bar" style="height: 70%;"></div>
+                            <div class="chart-bar" style="height: 90%;"></div>
+                            <div class="chart-bar" style="height: 85%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Everything you need, nothing you don't</h2>
+                <p>Built specifically for stores doing $100K-$5M in annual revenue</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Funnel Visualization</h3>
+                    <p>See exactly where customers drop off. From visit to purchase, identify friction points with industry benchmarks.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Recommendations</h3>
+                    <p>Get prioritized, actionable recommendations based on your data. No more guessing what to fix first.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📧</div>
+                    <h3>Executive Summaries</h3>
+                    <p>Daily and weekly email reports that tell you what matters. Perfect for busy founders.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-time Alerts</h3>
+                    <p>Get notified when something needs attention - stockouts, conversion drops, or opportunities.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Cohort Analysis</h3>
+                    <p>Understand customer lifetime value and retention patterns. Predict revenue with confidence.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔌</div>
+                    <h3>Easy Integration</h3>
+                    <p>Connect Shopify or WooCommerce in minutes. No developers needed, no code to install.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple, transparent pricing</h2>
+                <p>Scale as you grow. No hidden fees, no surprises.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-tier">Starter</div>
+                    <div class="pricing-price">$49<span>/month</span></div>
+                    <div class="pricing-limit">For stores under $100K/year</div>
+                    <ul class="pricing-features">
+                        <li>Core dashboard</li>
+                        <li>Weekly email reports</li>
+                        <li>Funnel visualization</li>
+                        <li>Basic recommendations</li>
+                        <li>7-day data history</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary" style="width: 100%; justify-content: center;">Get Started</a>
+                </div>
+                <div class="pricing-card popular">
+                    <span class="popular-badge">MOST POPULAR</span>
+                    <div class="pricing-tier">Growth</div>
+                    <div class="pricing-price">$99<span>/month</span></div>
+                    <div class="pricing-limit">For stores $100K-$1M/year</div>
+                    <ul class="pricing-features">
+                        <li>Everything in Starter</li>
+                        <li>AI diagnostic engine</li>
+                        <li>Slack/Discord alerts</li>
+                        <li>Cohort analysis</li>
+                        <li>90-day data history</li>
+                        <li>Priority email support</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" style="width: 100%; justify-content: center;">Get Started</a>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-tier">Scale</div>
+                    <div class="pricing-price">$199<span>/month</span></div>
+                    <div class="pricing-limit">For stores $1M-$5M/year</div>
+                    <ul class="pricing-features">
+                        <li>Everything in Growth</li>
+                        <li>Advanced forecasting</li>
+                        <li>Custom reports</li>
+                        <li>API access</li>
+                        <li>Unlimited data history</li>
+                        <li>Dedicated account manager</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary" style="width: 100%; justify-content: center;">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to optimize your store?</h2>
+            <p>Join 500+ e-commerce founders who trust ShopifyPulse</p>
+            <a href="/demo" class="btn btn-primary" style="font-size: 1.125rem; padding: 1rem 2.5rem;">
+                View Live Demo →
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 ShopifyPulse. Built for e-commerce founders.</p>
+        </div>
+    </footer>
+</body>
+</html>

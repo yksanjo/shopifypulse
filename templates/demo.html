@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopifyPulse - Demo Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="logo">📊</div>
+            <span class="brand-name">ShopifyPulse</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="nav-link active">Dashboard</a>
+            <a href="#funnel" class="nav-link">Funnel</a>
+            <a href="#recommendations" class="nav-link">Recommendations</a>
+            <a href="#" class="nav-link">Settings</a>
+        </div>
+        <div class="nav-actions">
+            <span class="store-badge">UrbanThreads</span>
+            <button class="btn btn-outline">Disconnect</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Header Section -->
+        <header class="dashboard-header">
+            <div>
+                <h1>Dashboard Overview</h1>
+                <p class="subtitle">Real-time insights for UrbanThreads</p>
+            </div>
+            <div class="period-selector">
+                <button class="period-btn" data-period="7d">7D</button>
+                <button class="period-btn active" data-period="30d">30D</button>
+                <button class="period-btn" data-period="90d">90D</button>
+                <button class="period-btn" data-period="1y">1Y</button>
+            </div>
+        </header>
+
+        <!-- Health Score Banner -->
+        <div class="health-banner">
+            <div class="health-score">
+                <div class="score-circle">
+                    <span class="score-value">87</span>
+                    <span class="score-label">Health</span>
+                </div>
+            </div>
+            <div class="health-metrics">
+                <div class="h-metric">
+                    <span class="h-label">Revenue Trend</span>
+                    <span class="h-value positive">↗ +12.5%</span>
+                </div>
+                <div class="h-metric">
+                    <span class="h-label">Conversion</span>
+                    <span class="h-value positive">5.46%</span>
+                </div>
+                <div class="h-metric">
+                    <span class="h-label">Active Alerts</span>
+                    <span class="h-value warning">2 Critical</span>
+                </div>
+            </div>
+            <div class="health-message">
+                <strong>Your store is performing well!</strong> 2 high-impact opportunities identified that could increase revenue by $37,000/month.
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon">💰</div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Revenue</span>
+                    <span class="kpi-value">$191,667</span>
+                    <span class="kpi-change positive">+12.5%</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">🛍️</div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Orders</span>
+                    <span class="kpi-value">2,458</span>
+                    <span class="kpi-change positive">+8.3%</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">👥</div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Visitors</span>
+                    <span class="kpi-value">45,000</span>
+                    <span class="kpi-change negative">-2.1%</span>
+                </div>
+            </div>
+            <div class="kpi-card highlight">
+                <div class="kpi-icon">📈</div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Conversion Rate</span>
+                    <span class="kpi-value">5.46%</span>
+                    <span class="kpi-change positive">+0.4pp</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Row -->
+        <section class="charts-row">
+            <div class="chart-card large">
+                <div class="chart-header">
+                    <h3>Revenue Trend</h3>
+                    <select class="chart-filter">
+                        <option>Revenue</option>
+                        <option>Orders</option>
+                        <option>Visitors</option>
+                    </select>
+                </div>
+                <div id="revenue-chart" class="chart-container"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Traffic Sources</h3>
+                </div>
+                <div id="traffic-chart" class="chart-container"></div>
+            </div>
+        </section>
+
+        <!-- Funnel Section -->
+        <section id="funnel" class="funnel-section">
+            <div class="section-header">
+                <h2>Conversion Funnel</h2>
+                <p>Identify drop-off points and optimization opportunities</p>
+            </div>
+            
+            <div class="funnel-container">
+                <div class="funnel-visualization">
+                    <div id="funnel-chart"></div>
+                </div>
+                <div class="funnel-insights">
+                    <h4>Key Insights</h4>
+                    <div class="insight-cards">
+                        <div class="insight-card critical">
+                            <div class="insight-icon">⚠️</div>
+                            <div class="insight-content">
+                                <span class="insight-title">Checkout Abandonment</span>
+                                <span class="insight-value">39.3% dropoff</span>
+                                <span class="insight-desc">Potential revenue at risk: <strong>$124,184</strong></span>
+                            </div>
+                        </div>
+                        <div class="insight-card good">
+                            <div class="insight-icon">✅</div>
+                            <div class="insight-content">
+                                <span class="insight-title">Add to Cart Rate</span>
+                                <span class="insight-value">30% (Top 28%)</span>
+                                <span class="insight-desc">Above industry average of 25%</span>
+                            </div>
+                        </div>
+                        <div class="insight-card opportunity">
+                            <div class="insight-icon">💡</div>
+                            <div class="insight-content">
+                                <span class="insight-title">Recovery Potential</span>
+                                <span class="insight-value">$74,400</span>
+                                <span class="insight-desc">Est. recoverable with fixes</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommendations Section -->
+        <section id="recommendations" class="recommendations-section">
+            <div class="section-header">
+                <h2>AI Recommendations</h2>
+                <p>Prioritized actions based on your store data</p>
+            </div>
+
+            <div class="rec-filters">
+                <button class="rec-filter active">All</button>
+                <button class="rec-filter">Critical</button>
+                <button class="rec-filter">High Impact</button>
+                <button class="rec-filter">Quick Wins</button>
+            </div>
+
+            <div class="recommendations-list" id="recommendations-list">
+                <!-- Recommendations will be populated by JS -->
+            </div>
+        </section>
+
+        <!-- Device & Benchmarks -->
+        <section class="bottom-row">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Device Performance</h3>
+                </div>
+                <div id="device-chart" class="chart-container"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Industry Benchmarks</h3>
+                </div>
+                <div class="benchmark-list">
+                    <div class="benchmark-item">
+                        <div class="benchmark-label">
+                            <span>Conversion Rate</span>
+                            <span class="benchmark-values">5.46% vs 3.2%</span>
+                        </div>
+                        <div class="benchmark-bar">
+                            <div class="benchmark-fill" style="width: 85%;"></div>
+                        </div>
+                        <span class="benchmark-percentile">85th percentile</span>
+                    </div>
+                    <div class="benchmark-item">
+                        <div class="benchmark-label">
+                            <span>Average Order Value</span>
+                            <span class="benchmark-values">$78 vs $65</span>
+                        </div>
+                        <div class="benchmark-bar">
+                            <div class="benchmark-fill" style="width: 72%;"></div>
+                        </div>
+                        <span class="benchmark-percentile">72nd percentile</span>
+                    </div>
+                    <div class="benchmark-item">
+                        <div class="benchmark-label">
+                            <span>LTV:CAC Ratio</span>
+                            <span class="benchmark-values">3.2 vs 2.5</span>
+                        </div>
+                        <div class="benchmark-bar">
+                            <div class="benchmark-fill" style="width: 78%;"></div>
+                        </div>
+                        <span class="benchmark-percentile">78th percentile</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 ShopifyPulse. Built for e-commerce founders.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
